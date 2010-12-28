@@ -1,0 +1,33 @@
+h1. An extendable autolinking library
+
+Under the impression that it is nearly impossible to write a robust autolinker without parsing the input text to a dom tree, i've written an autolinker that uses "Jsoup":http://jsoup.org/ to build trees and proccess them in a way that new types of links can easily be added. 
+
+Supported linkables are email addresses, Twitter usernames and urls.
+
+The project is a ready to use configured maven/eclipse project. 
+
+h2. Usage
+
+h3. Standalone
+
+<pre><code lang="java">
+final AutoLinker autoLinker = new AutoLinker();
+autoLinker.getLinkables().put(1, new LinkableUrls());
+// Add any other linkable
+    
+Document document = autoLinker.autoLink("Generate links to http://test1.com and www.test2.com");
+</code></pre>
+
+h3. In a Spring 3.x application
+
+<pre><code>
+<bean name="autoLinker" class="ac.simons.autolinker.AutoLinker">
+	<property name="linkables">
+		<map>
+			<entry key="1"><bean class="ac.simons.autolinker.LinkableEmailaddresses" /></entry>
+			<entry key="2"><bean class="ac.simons.autolinker.LinkableTwitterUsers" /></entry>
+			<entry key="3"><bean class="ac.simons.autolinker.LinkableUrls" /></entry>
+		</map>
+	</property>
+</bean>
+</code></pre>
