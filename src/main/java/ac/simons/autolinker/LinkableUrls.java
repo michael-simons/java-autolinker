@@ -33,7 +33,7 @@
  */
 package ac.simons.autolinker;
 
-import static ac.simons.autolinker.StringUtils.isBlank;
+import static ac.simons.utils.StringUtils.isBlank;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -43,6 +43,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Tag;
+
+import ac.simons.utils.StringUtils;
 
 /**
  * @author Michael J. Simons

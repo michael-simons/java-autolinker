@@ -33,7 +33,7 @@
  */
 package ac.simons.autolinker;
 
-import static ac.simons.autolinker.StringUtils.isBlank;
+import static ac.simons.utils.StringUtils.isBlank;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -43,6 +43,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Tag;
+
+import ac.simons.utils.StringUtils;
 
 /**
  * @author Michael J. Simons
@@ -77,7 +79,7 @@ public class LinkableEmailaddresses implements Linkable {
 			final String emailAddress = matcher.group();				
 			final Element newAnchor = new Element(Tag.valueOf("a"), baseUri);					
 			newAnchor.attr("href", String.format("%s%s", "mailto:", hexEncodeEmailAddress ? StringUtils.hexEncodeEmailAddress(emailAddress) : emailAddress));
-			newAnchor.appendChild(new TextNode(obfuscateEmailAddress ? StringUtils.obfuscateEmailAddress(emailAddress) : emailAddress, baseUri));
+			newAnchor.appendChild(new TextNode(obfuscateEmailAddress ? obfuscateEmailAddress(emailAddress) : emailAddress, baseUri));
 			changedNodes.add(newAnchor);
 			start = matcher.end();
 			changed = true;
@@ -103,5 +105,14 @@ public class LinkableEmailaddresses implements Linkable {
 
 	public void setObfuscateEmailAddress(boolean obfuscateEmailAddress) {
 		this.obfuscateEmailAddress = obfuscateEmailAddress;
+	}
+	
+	/**
+	 * Obfuscates an email address. @ will be replaced throught " [AT] " and . through " [DOT] " 
+	 * @param emailAddress
+	 * @return
+	 */
+	public static String obfuscateEmailAddress(final String emailAddress) {
+		return atSigns.matcher(emailAddress).replaceAll(" [AT] ").replaceAll("\\.", " [DOT] ");
 	}
 }

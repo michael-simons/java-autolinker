@@ -33,7 +33,7 @@
  */
 package ac.simons.autolinker;
 
-import static ac.simons.autolinker.StringUtils.isBlank;
+import static ac.simons.utils.StringUtils.isBlank;
 
 import java.util.List;
 import java.util.regex.Matcher;
