@@ -33,6 +33,7 @@
  */
 package ac.simons.autolinker;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,14 @@ public class AutoLinker {
 	}
 
 	public Document autoLink(final String in) {		
-		return StringUtils.isBlank(in) ? null : autoLink(Jsoup.parseBodyFragment(in));
+		return this.autoLink(in, null);
+	}
+	
+	public Document autoLink(final String in, final URL baseUrl) {
+		Document rv = null;
+		if(!StringUtils.isBlank(in))
+			rv = autoLink(Jsoup.parseBodyFragment(in, baseUrl == null ? "" : baseUrl.toString())); 		
+		return rv;
 	}
 	
 	public Document autoLink(final Document in) {
