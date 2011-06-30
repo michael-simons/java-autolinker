@@ -35,6 +35,7 @@ package ac.simons.autolinker;
 
 import static ac.simons.utils.StringUtils.isBlank;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +58,7 @@ public class LinkableEmailaddresses implements Linkable {
 	 */
 	public final static String validEmailAddress = "(?:[^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x22(?:[^\\x0d\\x22\\x5c\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x22)(?:\\x2e(?:[^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x22(?:[^\\x0d\\x22\\x5c\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x22))*\\x40(?:[^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x5b(?:[^\\x0d\\x5b-\\x5d\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x5d)(?:\\x2e(?:[^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+|\\x5b(?:[^\\x0d\\x5b-\\x5d\\x80-\\xff]|\\x5c[\\x00-\\x7f])*\\x5d))*";
 	public final static Pattern validEmailAddressPattern = Pattern.compile(String.format("\\A%s\\z", validEmailAddress));
-	public final static Pattern validEmailAddressPatternMl = Pattern.compile(String.format("(?m)%s", validEmailAddress));
+	public final static Pattern validEmailAddressPatternMl = Pattern.compile(String.format("(?m)(?<![^\\s])%s", validEmailAddress));
 	public final static Pattern atSigns = Pattern.compile("[@\uFF20\\x40]");
 	
 	private boolean hexEncodeEmailAddress = true;
@@ -71,12 +72,18 @@ public class LinkableEmailaddresses implements Linkable {
 		final String nodeText = node.getWholeText();
 		final Matcher matcher = validEmailAddressPatternMl.matcher(nodeText);
 		
-		while(matcher.find()) {			
+		while(matcher.find()) {
+			final String emailAddress = matcher.group();				
+			try {				
+				if(!(new String(emailAddress.getBytes(), "US-ASCII")).equals(emailAddress))
+					continue;
+			} catch (UnsupportedEncodingException e) {				
+			}
+			
 			final String textBefore = nodeText.substring(start, matcher.start());
 			if(!isBlank(textBefore))
 				changedNodes.add(new TextNode(textBefore, baseUri));
-							
-			final String emailAddress = matcher.group();				
+										
 			final Element newAnchor = new Element(Tag.valueOf("a"), baseUri);					
 			newAnchor.attr("href", String.format("%s%s", "mailto:", hexEncodeEmailAddress ? StringUtils.hexEncodeEmailAddress(emailAddress) : emailAddress));
 			newAnchor.appendChild(new TextNode(obfuscateEmailAddress ? obfuscateEmailAddress(emailAddress) : emailAddress, baseUri));
