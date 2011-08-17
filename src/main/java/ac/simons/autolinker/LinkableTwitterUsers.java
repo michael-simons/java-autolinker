@@ -48,7 +48,7 @@ import org.jsoup.parser.Tag;
  * @author Michael J. Simons
  */
 public class LinkableTwitterUsers implements Linkable {
-	public static final Pattern atTwitterUser = Pattern.compile("(?im)(^|[^a-z0-9_])" + LinkableEmailaddresses.atSigns + "([a-z0-9_]{1,20})(?=[\\s$\\)\\]\\}])");
+	public static final Pattern atTwitterUser = Pattern.compile("(?im)(^|[^a-z0-9_])" + LinkableEmailaddresses.atSigns + "([a-z0-9_]{1,20})(?=([\\s\\)\\]\\}]|$))");
 	
 	@Override
 	public boolean linkTo(List<Node> changedNodes, TextNode node, String baseUri) {
