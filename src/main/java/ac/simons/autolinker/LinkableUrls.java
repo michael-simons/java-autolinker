@@ -117,8 +117,10 @@ public class LinkableUrls implements Linkable {
 				changedNodes.add(new TextNode(textBefore, baseUri));
 			final String protocol = matcher.group(4) == null || matcher.group(4).length() == 0 ? "http://" : "";
 			final Element newAnchor = new Element(Tag.valueOf("a"), baseUri);					
-			newAnchor.attr("href", String.format("%s%s",  protocol, matcher.group(3)));
-			newAnchor.appendChild(new TextNode(StringUtils.truncate(matcher.group(3), maxLabelLength), baseUri));
+			final String hrefAndTitle = String.format("%s%s", protocol, matcher.group(3));
+			newAnchor.attr("href",  hrefAndTitle);
+			newAnchor.attr("title", hrefAndTitle);			
+			newAnchor.appendChild(new TextNode(StringUtils.truncate(matcher.group(3).replaceFirst(Pattern.quote(StringUtils.nvl(matcher.group(4), protocol)), ""), maxLabelLength), baseUri));
 			changedNodes.add(newAnchor);
 			start = matcher.end();
 			changed = true;
