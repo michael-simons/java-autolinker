@@ -37,7 +37,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.michael-simons</groupId>
 	<artifactId>java-autolinker</artifactId>
-	<version>0.0.9-SNAPSHOT</version>
+	<version>0.0.9</version>
 	<name>java-autolinker</name>
 	<description>An extendable autolinking library</description>
 	<build>
@@ -92,7 +92,7 @@
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.6.2</version>
+			<version>1.6.3</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
