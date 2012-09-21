@@ -72,13 +72,15 @@ public class AutoLinkerTest {
 		autoLinker.getLinkables().put(2, new LinkableTwitterUsers());
 		autoLinker.getLinkables().put(3, new LinkableUrls());
 		
-		
+		int cnt = 0;
 		for(String key : keys) {
 			final String in = String.format("%s.in", key.trim());
 			final String out = String.format("%s.out", key.trim());
 			Document document = autoLinker.autoLink(texts.getProperty(in));
 			document.outputSettings().prettyPrint(false).escapeMode(EscapeMode.xhtml);				
-			Assert.assertEquals(texts.getProperty(out), document.body().html());
+			Assert.assertEquals("Test " + key + " fails", texts.getProperty(out), document.body().html());			
+			++cnt;
 		}
+		Assert.assertTrue(cnt > 0);
 	}
 }

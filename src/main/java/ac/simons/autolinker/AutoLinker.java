@@ -93,16 +93,10 @@ public class AutoLinker {
 		boolean changed = false;
 		for(Node childNode : element.childNodes()) {
 			// Child node is itself an element with children
-			if(childNode instanceof Element) {
-				// These are elements directly unter body and must be stored if a child node of the body is changed
-				// They will be skipped in the next call if their anchors
-				if(element.tagName().equals("body"))
-					newAnchors.add(childNode);				
+			if(childNode instanceof Element) {								
 				final Element changedElement = autoLinkHelper(baseUri, (Element) childNode, linkable);
-				if(changedElement != null) {					
-					newAnchors.remove(childNode);					
-					newAnchors.add(changedElement);
-				}
+				// These are elements directly unter body and must be stored if a child node of the body is changed				
+				newAnchors.add(changedElement == null ? childNode : changedElement);							
 			}
 			// Only TextNodes may have possible urls
 			else if(childNode instanceof TextNode) {
