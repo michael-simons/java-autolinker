@@ -86,10 +86,10 @@ public class AutoLinker {
 		return rv;
 	}
 	
-	private void autoLinkHelper(final String baseUri, final Element element, final Linkable linkable) {
+	private Element autoLinkHelper(final String baseUri, final Element element, final Linkable linkable) {
 		final List<Node> newAnchors = new ArrayList<Node>();		
 		if(element.tagName().equals("a")) 
-			return; 	
+			return null; 	
 		boolean changed = false;
 		for(Node childNode : element.childNodes()) {
 			// Child node is itself an element with children
@@ -98,7 +98,11 @@ public class AutoLinker {
 				// They will be skipped in the next call if their anchors
 				if(element.tagName().equals("body"))
 					newAnchors.add(childNode);				
-				autoLinkHelper(baseUri, (Element) childNode, linkable);
+				final Element changedElement = autoLinkHelper(baseUri, (Element) childNode, linkable);
+				if(changedElement != null) {					
+					newAnchors.remove(childNode);					
+					newAnchors.add(changedElement);
+				}
 			}
 			// Only TextNodes may have possible urls
 			else if(childNode instanceof TextNode) {
@@ -109,12 +113,15 @@ public class AutoLinker {
 				newAnchors.add(childNode);
 			}
 		}
+		Element rv = element;
 		// Rebuild the parent element
 		if(changed) {			
 			final Element newElement = new Element(element.tag(), baseUri, element.attributes());
 			for(Node node : newAnchors)
 				newElement.appendChild(node);
 			element.replaceWith(newElement);
+			rv = newElement;
 		}	
+		return rv;
 	}
 }
