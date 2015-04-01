@@ -2,32 +2,50 @@ h1. An extendable autolinking library
 
 Under the impression that it is nearly impossible to write a robust autolinker without parsing the input text to a dom tree, i've written an autolinker that uses "Jsoup":http://jsoup.org/ to build trees and proccess them in a way that new types of links can easily be added. 
 
-Supported linkables are email addresses, Twitter usernames and urls.
+The core service of this project is the _AutoLinkService_ which uses several _AutoLinkers_ to add links to arbitrary text. 3 autolinkers (URLs, E-Mail adresses and Twitter Handles) are build in.
 
-The project is a ready to use configured maven/eclipse project. 
+Since version 0.1.1 this project is Java 8 *only*.
+
+The project is a ready to use configured maven project and has nearly 100% test coverage.
 
 h2. Usage
 
 h3. Standalone
 
 <pre><code lang="java">
-final AutoLinker autoLinker = new AutoLinker();
-autoLinker.getLinkables().put(1, new LinkableUrls());
-// Add any other linkable
-    
-Document document = autoLinker.autoLink("Generate links to http://test1.com and www.test2.com");
+public static void main(String... args) {
+	// Instantiate AutoLinkService using all available autolinkers
+	final AutoLinkService autoLinkService = new AutoLinkService(Arrays.asList(
+		new EmailAddressAutoLinker(true, true),
+		new TwitterUserAutoLinker(),
+		new UrlAutoLinker(30)
+	));
+	// Autolink stuff
+	System.out.println(autoLinkService.addLinks("Maybe there's a link http://michael-simons.eu to @rotnroll666", Optional.empty()));
+}
 </code></pre>
 
-h3. In a Spring 3.x application
+or have a look at the test code. 
 
-<pre><code>
-<bean name="autoLinker" class="ac.simons.autolinker.AutoLinker">
-	<property name="linkables">
-		<map>
-			<entry key="1"><bean class="ac.simons.autolinker.LinkableEmailaddresses" /></entry>
-			<entry key="2"><bean class="ac.simons.autolinker.LinkableTwitterUsers" /></entry>
-			<entry key="3"><bean class="ac.simons.autolinker.LinkableUrls" /></entry>
-		</map>
-	</property>
-</bean>
+The _AutoLinkService_  can be easily registered as a
+
+h3. As a Spring bean
+
+<pre><code lang="java">
+@Bean
+public AutoLinkService autoLinkService(
+  @Value("${dailyfratze.emailAddressAutoLinker.hexEncodeEmailAddress:true}") boolean hexEncodeEmailAddress,
+  @Value("${dailyfratze.emailAddressAutoLinker.obfuscateEmailAddress:true}") boolean obfuscateEmailAddress,
+  @Value("${dailyfratze.urlAutoLinker.maxLabelLength:30}") int maxLabelLength	    
+) {
+  return new AutoLinkService(Arrays.asList(
+  		new EmailAddressAutoLinker(hexEncodeEmailAddress, obfuscateEmailAddress),
+  		new TwitterUserAutoLinker(),
+  		new UrlAutoLinker(maxLabelLength)		
+  ));
+}
 </code></pre>
+
+I assume you know what you're doing with Spring, so i don't explain that further.
+
+Enjoy and if you find that library usefull, drop me a line or star it. Thanks.
