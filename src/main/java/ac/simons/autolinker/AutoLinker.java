@@ -1,121 +1,44 @@
-/**
- * Created by Michael Simons, michael-simons.eu
- * and released under The BSD License
- * http://www.opensource.org/licenses/bsd-license.php
+/*
+ * Copyright 2014 michael-simons.eu.
  *
- * Copyright (c) 2010, Michael Simons
- * All rights reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Redistribution  and  use  in  source   and  binary  forms,  with  or   without
- * modification, are permitted provided that the following conditions are met:
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * * Redistributions of source   code must retain   the above copyright   notice,
- *   this list of conditions and the following disclaimer.
- *
- * * Redistributions in binary  form must reproduce  the above copyright  notice,
- *   this list of conditions  and the following  disclaimer in the  documentation
- *   and/or other materials provided with the distribution.
- *
- * * Neither the name  of  michael-simons.eu   nor the names  of its contributors
- *   may be used  to endorse   or promote  products derived  from  this  software
- *   without specific prior written permission.
- *
- * THIS SOFTWARE IS  PROVIDED BY THE  COPYRIGHT HOLDERS AND  CONTRIBUTORS "AS IS"
- * AND ANY  EXPRESS OR  IMPLIED WARRANTIES,  INCLUDING, BUT  NOT LIMITED  TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL  THE COPYRIGHT HOLDER OR CONTRIBUTORS  BE LIABLE
- * FOR ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL,  EXEMPLARY, OR  CONSEQUENTIAL
- * DAMAGES (INCLUDING,  BUT NOT  LIMITED TO,  PROCUREMENT OF  SUBSTITUTE GOODS OR
- * SERVICES; LOSS  OF USE,  DATA, OR  PROFITS; OR  BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package ac.simons.autolinker;
 
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
-import ac.simons.utils.StringUtils;
-
 /**
- * @author Michael J. Simons
+ * Defines something that can be detected inside a bunch of text node and turned
+ * into an html anchor tag. The interface is similar to interface "Linkable"
+ * from my 2010er project
+ * <a href="https://github.com/michael-simons/java-autolinker">java-autolinker</a>.
+ *
+ * @author Michael J. Simons, 2012-12-27
  */
-public class AutoLinker {
-	private Map<Integer, Linkable> linkables = new TreeMap<Integer, Linkable>();
+public interface AutoLinker {
 
-	public Map<Integer, Linkable> getLinkables() {
-		return linkables;
-	}
-
-	public void setLinkables(Map<Integer, Linkable> linkables) {
-		this.linkables = linkables;
-	}
-
-	public Document autoLink(final String in) {		
-		return this.autoLink(in, null);
-	}
-	
-	public Document autoLink(final String in, final URL baseUrl) {
-		Document rv = null;
-		if(!StringUtils.isBlank(in))
-			rv = autoLink(Jsoup.parseBodyFragment(in, baseUrl == null ? "" : baseUrl.toString())); 		
-		return rv;
-	}
-	
-	public Document autoLink(final Document in) {
-		Document rv = in;
-		if(rv != null) {						
-			for(Element _element: rv.children()) {	
-				// Ensure that the linkables are sorted
-				TreeMap<Integer, Linkable> _linkables = (TreeMap<Integer, Linkable>) (linkables instanceof TreeMap ? linkables : new TreeMap<Integer, Linkable>(linkables));
-				for(Linkable linkable : _linkables.values()) { 
-					autoLinkHelper(rv.baseUri(), _element, linkable);						
-				}				
-			}
-		}
-		return rv;
-	}
-	
-	private Element autoLinkHelper(final String baseUri, final Element element, final Linkable linkable) {
-		final List<Node> newAnchors = new ArrayList<Node>();		
-		if(element.tagName().equals("a")) 
-			return null; 	
-		boolean changed = false;
-		for(Node childNode : element.childNodes()) {
-			// Child node is itself an element with children
-			if(childNode instanceof Element) {								
-				final Element changedElement = autoLinkHelper(baseUri, (Element) childNode, linkable);
-				// These are elements directly unter body and must be stored if a child node of the body is changed				
-				newAnchors.add(changedElement == null ? childNode : changedElement);							
-			}
-			// Only TextNodes may have possible urls
-			else if(childNode instanceof TextNode) {
-				final TextNode node = (TextNode) childNode;				
-				changed |= linkable.linkTo(newAnchors, node, baseUri);
-			// Other nodes are just kept
-			} else {
-				newAnchors.add(childNode);
-			}
-		}
-		Element rv = element;
-		// Rebuild the parent element
-		if(changed) {			
-			final Element newElement = new Element(element.tag(), baseUri, element.attributes());
-			for(Node node : newAnchors)
-				newElement.appendChild(node);
-			element.replaceWith(newElement);
-			rv = newElement;
-		}	
-		return rv;
-	}
+    /**
+     * Gets the content of <code>node</code> and tries to find linkable content.
+     * If content is found, create new text nodes before and after the content
+     * and a new anchor element with the new link
+     * <br>
+     * If the autolinker makes no changes, just return a list containing the
+     * original node.
+     *
+     * @param textNode The text node which may contain linkable texts
+     * @return The new node list created from {@code textNode}
+     */
+    public List<Node> createLinks(final TextNode textNode);
 }
