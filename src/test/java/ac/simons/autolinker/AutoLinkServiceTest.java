@@ -34,13 +34,18 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  *
  * @author Michael J. Simons
  */
 public class AutoLinkServiceTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     static List<Node> makeAutoLinker(final TextNode textNode, final String pattern) {
 	final String text = textNode.getWholeText();
@@ -157,6 +162,15 @@ public class AutoLinkServiceTest {
     }
 
     @Test
+    public void addLinksShouldWork2() {
+	expectedException.expect(RuntimeException.class);
+	expectedException.expectMessage("Invalid target class: java.lang.Integer");
+
+	final AutoLinkService autoLinkService = new AutoLinkService(Arrays.asList(AutoLinkServiceTest::autoLink1, AutoLinkServiceTest::autoLink2));
+	autoLinkService.addLinks(null, Optional.empty(), Integer.class);
+    }
+
+    @Test
     public void oldJavaAutolinkerTest() throws IOException {
 	Properties texts = new Properties();
 	texts.load(new InputStreamReader(AutoLinkServiceTest.class.getResourceAsStream("/ac/simons/autolinker/testdata.properties"), StandardCharsets.UTF_8));
@@ -171,13 +185,13 @@ public class AutoLinkServiceTest {
 	final AutoLinkService autoLinkService = new AutoLinkService(Arrays.asList(
 		new EmailAddressAutoLinker(true, true),
 		new TwitterUserAutoLinker(),
-		new UrlAutoLinker(30)		
+		new UrlAutoLinker(30)
 	));
-			
+
 	int cnt = keys.stream().map((key) -> {
 	    final String in = String.format("%s.in", key.trim());
 	    final String out = String.format("%s.out", key.trim());
-	    String result = autoLinkService.addLinks(texts.getProperty(in), Optional.empty());	    
+	    String result = autoLinkService.addLinks(texts.getProperty(in), Optional.empty());
 	    Assert.assertEquals("Test " + key + " fails", texts.getProperty(out), result);
 	    return key;
 	}).map((_item) -> 1).reduce(0, Integer::sum);
