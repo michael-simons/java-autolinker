@@ -41,7 +41,7 @@
 
     <groupId>eu.michael-simons</groupId>
     <artifactId>java-autolinker</artifactId>
-    <version>0.1.5-SNAPSHOT</version>
+    <version>0.1.5</version>
     
     <name>java-autolinker</name>
     <description>An extendable autolinking library</description>
@@ -72,7 +72,7 @@
 	<connection>scm:git:git@github.com:michael-simons/java-autolinker.git</connection>
 	<developerConnection>scm:git:git@github.com:michael-simons/java-autolinker.git</developerConnection>
 	<url>https://github.com/michael-simons/java-autolinker</url>
-	<tag>HEAD</tag>
+	<tag>0.1.5</tag>
     </scm>
     
     <build>
