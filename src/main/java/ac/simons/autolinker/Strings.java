@@ -27,9 +27,9 @@ public final class Strings {
 
     /**
      * @see #truncate(java.lang.String, int, java.util.Optional)
-     * @param in
-     * @param length
-     * @return
+     * @param in The text to truncate
+     * @param length Length after which strings should be truncated
+     * @return A truncated string
      */
     public static String truncate(final String in, final int length) {
 	return truncate(in, length, Optional.of("…"));

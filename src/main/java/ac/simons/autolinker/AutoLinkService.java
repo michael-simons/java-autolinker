@@ -77,9 +77,9 @@ public class AutoLinkService {
     
     /**
      * @see #addLinks(java.lang.String, java.util.Optional, java.lang.Class) 
-     * @param textWithLinkableStuff
-     * @param baseUrl
-     * @return 
+     * @param textWithLinkableStuff The text that contains possible urls
+     * @param baseUrl Base url for creating absolute urls from relative urls
+     * @return The text with all recognizable URLs turned into links
      */
     public String addLinks(final String textWithLinkableStuff, final Optional<String> baseUrl) {
 	return addLinks(textWithLinkableStuff, baseUrl, String.class);
@@ -92,7 +92,7 @@ public class AutoLinkService {
      * @param <T> Type of the resulting document with embedded links
      * @param textWithLinkableStuff A list that may contain urls and such
      * @param baseUrl An optional base url for resolving relative urls
-     * @param targetClass
+     * @param targetClass Class of the generated document
      * @return A new text with urls turned into anchor tags.
      */
     public <T> T addLinks(final String textWithLinkableStuff, final Optional<String> baseUrl, Class<? extends T> targetClass) {
