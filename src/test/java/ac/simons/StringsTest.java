@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package de.dailyfratze.text;
+package ac.simons;
 
+import ac.simons.autolinker.Strings;
 import java.util.Optional;
 import org.junit.Rule;
 import org.junit.Test;

@@ -15,7 +15,6 @@
  */
 package ac.simons.autolinker;
 
-import de.dailyfratze.text.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
