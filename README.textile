@@ -1,5 +1,7 @@
 h1. An extendable autolinking library
 
+!https://travis-ci.org/michael-simons/java-autolinker.svg?branch=master!:https://travis-ci.org/michael-simons/java-autolinker !https://maven-badges.herokuapp.com/maven-central/eu.michael-simons/java-autolinker/badge.svg(Maven Central)!:https://maven-badges.herokuapp.com/maven-central/eu.michael-simons/java-autolinker
+
 Under the impression that it is nearly impossible to write a robust autolinker without parsing the input text to a dom tree, i've written an autolinker that uses "Jsoup":http://jsoup.org/ to build trees and proccess them in a way that new types of links can easily be added. 
 
 The core service of this project is the _AutoLinkService_ which uses several _AutoLinkers_ to add links to arbitrary text. 3 autolinkers (URLs, E-Mail adresses and Twitter Handles) are build in.
