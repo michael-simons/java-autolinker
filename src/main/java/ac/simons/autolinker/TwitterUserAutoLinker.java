@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 michael-simons.eu.
+ * Copyright 2014-2018 michael-simons.eu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,11 +45,11 @@ public class TwitterUserAutoLinker implements AutoLinker {
 	    // Add a new textnode for everything before the url
 	    final String textBefore = String.format("%s%s", nodeText.substring(start, matcher.start()), matcher.group(1));
 	    if (!textBefore.isEmpty()) {
-		rv.add(new TextNode(textBefore, baseUri));
+		rv.add(new TextNode(textBefore));
 	    }
 	    final Element newAnchor = new Element(Tag.valueOf("a"), baseUri);
 	    newAnchor.attr("href", String.format("https://twitter.com/%s", matcher.group(Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME)));
-	    newAnchor.appendChild(new TextNode(String.format("@%s", matcher.group(Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME)), baseUri));
+	    newAnchor.appendChild(new TextNode(String.format("@%s", matcher.group(Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME))));
 	    rv.add(newAnchor);
 	    start = matcher.end();
 	}
@@ -57,7 +57,7 @@ public class TwitterUserAutoLinker implements AutoLinker {
 	// Add a new textnode for everything after
 	final String textAfter = nodeText.substring(start);
 	if (!textAfter.isEmpty()) {
-	    rv.add(new TextNode(textAfter, baseUri));
+	    rv.add(new TextNode(textAfter));
 	}
 	return rv;
     }

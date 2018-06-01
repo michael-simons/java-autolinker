@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 michael-simons.eu.
+ * Copyright 2014-2018 michael-simons.eu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,5 +40,5 @@ public interface AutoLinker {
      * @param textNode The text node which may contain linkable texts
      * @return The new node list created from {@code textNode}
      */
-    public List<Node> createLinks(final TextNode textNode);
+    List<Node> createLinks(TextNode textNode);
 }

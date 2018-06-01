@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 michael-simons.eu.
+ * Copyright 2014-2018 michael-simons.eu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,12 +35,12 @@ public class EmailAddressAutoLinkerTest {
 	List<Node> result;
 	Element a;
 
-	result = autoLinker.createLinks(new TextNode("das ist ein test “@rotnroll666 ohne urls", ""));
+	result = autoLinker.createLinks(new TextNode("das ist ein test “@rotnroll666 ohne urls"));
 	Assert.assertTrue(result.size() == 1);
 	Assert.assertTrue(result.get(0) instanceof TextNode);
 	Assert.assertEquals("das ist ein test “@rotnroll666 ohne urls", ((TextNode) result.get(0)).getWholeText());
 	
-	result = autoLinker.createLinks(new TextNode("  michael.simons@test.com ohne protocoll am ende michael@test.com  ", ""));
+	result = autoLinker.createLinks(new TextNode("  michael.simons@test.com ohne protocoll am ende michael@test.com  "));
 	Assert.assertTrue(result.size() == 5);
 		
 	Assert.assertTrue(result.get(0) instanceof TextNode);
@@ -72,12 +72,12 @@ public class EmailAddressAutoLinkerTest {
 	List<Node> result;
 	Element a;
 
-	result = autoLinker.createLinks(new TextNode("das ist ein test ohne urls", ""));
+	result = autoLinker.createLinks(new TextNode("das ist ein test ohne urls"));
 	Assert.assertTrue(result.size() == 1);
 	Assert.assertTrue(result.get(0) instanceof TextNode);
 	Assert.assertEquals("das ist ein test ohne urls", ((TextNode) result.get(0)).getWholeText());
 	
-	result = autoLinker.createLinks(new TextNode("michael.simons@test.com ohne protocoll am ende michael@test.com", ""));
+	result = autoLinker.createLinks(new TextNode("michael.simons@test.com ohne protocoll am ende michael@test.com"));
 	Assert.assertTrue(result.size() == 3);
 			
 	Assert.assertTrue(result.get(0) instanceof Element);

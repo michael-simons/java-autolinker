@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 michael-simons.eu.
+ * Copyright 2014-2018 michael-simons.eu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,18 +89,18 @@ public class EmailAddressAutoLinker implements AutoLinker {
 
 	    final String textBefore = nodeText.substring(start, matcher.start());
 	    if (!textBefore.isEmpty()) {
-		rv.add(new TextNode(textBefore, baseUri));
+		rv.add(new TextNode(textBefore));
 	    }
 	    final Element newAnchor = new Element(Tag.valueOf("a"), baseUri);
 	    newAnchor.attr("href", String.format("%s%s", "mailto:", hexEncodeEmailAddress ? hexEncodeEmailAddress(emailAddress) : emailAddress));
-	    newAnchor.appendChild(new TextNode(obfuscateEmailAddress ? obfuscateEmailAddress(emailAddress) : emailAddress, baseUri));
+	    newAnchor.appendChild(new TextNode(obfuscateEmailAddress ? obfuscateEmailAddress(emailAddress) : emailAddress));
 	    rv.add(newAnchor);
 	    start = matcher.end();
 	}
 	// Add a new textnode for everything after
 	final String textAfter = nodeText.substring(start);
 	if (!textAfter.isEmpty()) {
-	    rv.add(new TextNode(textAfter, baseUri));
+	    rv.add(new TextNode(textAfter));
 	}
 	return rv;
     }

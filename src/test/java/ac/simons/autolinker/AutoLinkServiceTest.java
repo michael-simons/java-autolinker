@@ -56,14 +56,14 @@ public class AutoLinkServiceTest {
 	while (matcher.find()) {
 	    final String textBefore = text.substring(start, matcher.start());
 	    if (!textBefore.isEmpty()) {
-		nodes.add(new TextNode(textBefore, baseUri));
+		nodes.add(new TextNode(textBefore));
 	    }
-	    nodes.add(new TextNode("THELINK!", baseUri));
+	    nodes.add(new TextNode("THELINK!"));
 	    start = matcher.end();
 	}
 	final String textAfter = text.substring(start);
 	if (!textAfter.isEmpty()) {
-	    nodes.add(new TextNode(textAfter, baseUri));
+	    nodes.add(new TextNode(textAfter));
 	}
 
 	return nodes;

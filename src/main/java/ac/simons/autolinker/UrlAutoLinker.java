@@ -62,7 +62,7 @@ public class UrlAutoLinker implements AutoLinker {
 	    // Add a new textnode for everything before the url
 	    final String textBefore = String.format("%s%s", nodeText.substring(start, matcher.start()), matcher.group(Regex.VALID_URL_GROUP_BEFORE));
 	    if (!textBefore.isEmpty()) {
-		rv.add(new TextNode(textBefore, baseUri));
+		rv.add(new TextNode(textBefore));
 	    }
 	    final Optional<String> protocol = Optional.ofNullable(matcher.group(Regex.VALID_URL_GROUP_PROTOCOL));
 
@@ -71,14 +71,14 @@ public class UrlAutoLinker implements AutoLinker {
 	    newAnchor.attr("href", url);
 	    newAnchor.attr("title", url);
 
-	    newAnchor.appendChild(new TextNode(Strings.truncate(matcher.group(Regex.VALID_URL_GROUP_URL).replaceFirst(Pattern.quote(protocol.orElse("http://")), ""), maxLabelLength), baseUri));
+	    newAnchor.appendChild(new TextNode(Strings.truncate(matcher.group(Regex.VALID_URL_GROUP_URL).replaceFirst(Pattern.quote(protocol.orElse("http://")), ""), maxLabelLength)));
 	    rv.add(newAnchor);
 	    start = matcher.end();
 	}
 	// Add a new textnode for everything after
 	final String textAfter = nodeText.substring(start);
 	if (!textAfter.isEmpty()) {
-	    rv.add(new TextNode(textAfter, baseUri));
+	    rv.add(new TextNode(textAfter));
 	}
 	return rv;
     }
