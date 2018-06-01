@@ -6,9 +6,13 @@ Under the impression that it is nearly impossible to write a robust autolinker w
 
 The core service of this project is the _AutoLinkService_ which uses several _AutoLinkers_ to add links to arbitrary text. 3 autolinkers (URLs, E-Mail adresses and Twitter Handles) are build in.
 
+The project is a ready to use configured maven project and has nearly 100% test coverage.
+
+*Important*
+
 Since version 0.1.1 this project is Java 8 *only*.
 
-The project is a ready to use configured maven project and has nearly 100% test coverage.
+Since version 0.2.1 this project is Java 10 *only*. In addition, it uses Spring Boots dependency management.
 
 h2. Usage
 
