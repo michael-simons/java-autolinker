@@ -149,16 +149,16 @@ public class AutoLinkServiceTest {
 
 	in = "Einfach nur so ein Text";
 	expected = in;
-	Assert.assertEquals(expected, autoLinkService.addLinks(in, Optional.empty()));
+	Assert.assertEquals(expected, autoLinkService.addLinks(in, null));
 
 	in = "Einfach nur linkme so ein Text und meToo.";
 	expected = "Einfach nur THELINK! so ein Text und THELINK!.";
-	Assert.assertEquals(expected, autoLinkService.addLinks(in, Optional.empty()));
+	Assert.assertEquals(expected, autoLinkService.addLinks(in, null));
 
-	Assert.assertNull(autoLinkService.addLinks(null, Optional.empty()));
-	Assert.assertEquals("", autoLinkService.addLinks("", Optional.empty()));
-	Assert.assertEquals("	", autoLinkService.addLinks("	", Optional.empty()));
-	Assert.assertEquals(" ", autoLinkService.addLinks(" ", Optional.empty()));
+	Assert.assertNull(autoLinkService.addLinks(null, null));
+	Assert.assertEquals("", autoLinkService.addLinks("", null));
+	Assert.assertEquals("	", autoLinkService.addLinks("	", null));
+	Assert.assertEquals(" ", autoLinkService.addLinks(" ", null));
     }
 
     @Test
@@ -167,7 +167,7 @@ public class AutoLinkServiceTest {
 	expectedException.expectMessage("Invalid target class: java.lang.Integer");
 
 	final AutoLinkService autoLinkService = new AutoLinkService(Arrays.asList(AutoLinkServiceTest::autoLink1, AutoLinkServiceTest::autoLink2));
-	autoLinkService.addLinks(null, Optional.empty(), Integer.class);
+	autoLinkService.addLinks(null, null, Integer.class);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class AutoLinkServiceTest {
 	int cnt = keys.stream().map((key) -> {
 	    final String in = String.format("%s.in", key.trim());
 	    final String out = String.format("%s.out", key.trim());
-	    String result = autoLinkService.addLinks(texts.getProperty(in), Optional.empty());
+	    String result = autoLinkService.addLinks(texts.getProperty(in), null);
 	    Assert.assertEquals("Test " + key + " fails", texts.getProperty(out), result);
 	    return key;
 	}).map((_item) -> 1).reduce(0, Integer::sum);

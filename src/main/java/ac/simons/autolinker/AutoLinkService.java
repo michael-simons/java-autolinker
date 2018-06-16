@@ -74,14 +74,14 @@ public class AutoLinkService {
 	newChildNodes.forEach(rv::appendChild);
 	return rv;
     }
-    
+
     /**
-     * @see #addLinks(java.lang.String, java.util.Optional, java.lang.Class) 
+     * @see #addLinks(java.lang.String, java.lang.String, java.lang.Class)
      * @param textWithLinkableStuff The text that contains possible urls
      * @param baseUrl Base url for creating absolute urls from relative urls
      * @return The text with all recognizable URLs turned into links
      */
-    public String addLinks(final String textWithLinkableStuff, final Optional<String> baseUrl) {
+    public String addLinks(final String textWithLinkableStuff, final String baseUrl) {
 	return addLinks(textWithLinkableStuff, baseUrl, String.class);
     }
 
@@ -95,19 +95,20 @@ public class AutoLinkService {
      * @param targetClass Class of the generated document
      * @return A new text with urls turned into anchor tags.
      */
-    public <T> T addLinks(final String textWithLinkableStuff, final Optional<String> baseUrl, Class<? extends T> targetClass) {
+    public <T> T addLinks(final String textWithLinkableStuff, final String baseUrl, Class<? extends T> targetClass) {
+	var optionalBaseUrl = Optional.ofNullable(baseUrl);
 	T rv;
 	if (String.class.isAssignableFrom(targetClass)) {
 	    rv = (T) textWithLinkableStuff;
 	} else if (Document.class.isAssignableFrom(targetClass)) {
-	    rv = (T) Document.createShell(baseUrl.orElse(""));
+	    rv = (T) Document.createShell(optionalBaseUrl.orElse(""));
 	} else {
 	    throw new RuntimeException(String.format("Invalid target class: %s", targetClass.getName()));
 	}
-	
+
 	if (!(textWithLinkableStuff == null || textWithLinkableStuff.trim().isEmpty())) {
 	    // Create a document
-	    final Document document = addLinks(Jsoup.parseBodyFragment(textWithLinkableStuff, baseUrl.orElse("")));
+	    final Document document = addLinks(Jsoup.parseBodyFragment(textWithLinkableStuff, optionalBaseUrl.orElse("")));
 	    // As the linkables do their work in place, use the document as return
 	    if(Document.class.isAssignableFrom(targetClass)) {
 		rv = (T) document;
@@ -126,7 +127,7 @@ public class AutoLinkService {
     /**
      * A convenience method for adding links in an existing document.
      *
-     * @see #addLinks(java.lang.String, java.util.Optional, java.lang.Class) 
+     * @see #addLinks(java.lang.String, java.lang.String, java.lang.Class)
      * @param document Existing document, will be modified
      * @return Modified document with autolinked urls
      */

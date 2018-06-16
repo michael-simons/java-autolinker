@@ -2,7 +2,7 @@ h1. An extendable autolinking library
 
 !https://travis-ci.org/michael-simons/java-autolinker.svg?branch=master!:https://travis-ci.org/michael-simons/java-autolinker !https://maven-badges.herokuapp.com/maven-central/eu.michael-simons/java-autolinker/badge.svg(Maven Central)!:https://maven-badges.herokuapp.com/maven-central/eu.michael-simons/java-autolinker
 
-Under the impression that it is nearly impossible to write a robust autolinker without parsing the input text to a dom tree, i've written an autolinker that uses "Jsoup":http://jsoup.org/ to build trees and proccess them in a way that new types of links can easily be added. 
+Under the impression that it is nearly impossible to write a robust autolinker without parsing the input text to a dom tree, i've written an autolinker that uses "Jsoup":http://jsoup.org/ to build trees and proccess them in a way that new types of links can easily be added.
 
 The core service of this project is the _AutoLinkService_ which uses several _AutoLinkers_ to add links to arbitrary text. 3 autolinkers (URLs, E-Mail adresses and Twitter Handles) are build in.
 
@@ -12,7 +12,9 @@ The project is a ready to use configured maven project and has nearly 100% test 
 
 Since version 0.1.1 this project is Java 8 *only*.
 
-Since version 0.2.1 this project is Java 10 *only*. In addition, it uses Spring Boots dependency management.
+Since version 0.2.1 this project is Java 10+ *only*. In addition, it uses Spring Boots dependency management.
+
+Since version 0.3.1 I have changed the API of _AutoLinkService_ and removed _Optional<>_ as input parameter as suggested by various people (Joshua Bloch, Simon Harrer and others).
 
 h2. Usage
 
@@ -31,7 +33,7 @@ public static void main(String... args) {
 }
 </code></pre>
 
-or have a look at the test code. 
+or have a look at the test code.
 
 The _AutoLinkService_  can be easily registered as a
 
@@ -42,12 +44,12 @@ h3. As a Spring bean
 public AutoLinkService autoLinkService(
   @Value("${dailyfratze.emailAddressAutoLinker.hexEncodeEmailAddress:true}") boolean hexEncodeEmailAddress,
   @Value("${dailyfratze.emailAddressAutoLinker.obfuscateEmailAddress:true}") boolean obfuscateEmailAddress,
-  @Value("${dailyfratze.urlAutoLinker.maxLabelLength:30}") int maxLabelLength	    
+  @Value("${dailyfratze.urlAutoLinker.maxLabelLength:30}") int maxLabelLength
 ) {
   return new AutoLinkService(Arrays.asList(
   		new EmailAddressAutoLinker(hexEncodeEmailAddress, obfuscateEmailAddress),
   		new TwitterUserAutoLinker(),
-  		new UrlAutoLinker(maxLabelLength)		
+  		new UrlAutoLinker(maxLabelLength)
   ));
 }
 </code></pre>
