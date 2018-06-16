@@ -15,50 +15,51 @@
  */
 package ac.simons.autolinker;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Tag;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+
 /**
  * Turns @mentions into anchor elements.
- * 
+ *
  * @author Michael J. Simons, 2014-12-27
  */
-public class TwitterUserAutoLinker implements AutoLinker {
+public final class TwitterUserAutoLinker implements AutoLinker {
 
-    @Override
-    public List<Node> createLinks(final TextNode textNode) {
+	@Override
+	public List<Node> createLinks(final TextNode textNode) {
 
-	final List<Node> rv = new ArrayList<>();
+		final List<Node> rv = new ArrayList<>();
 
-	int start = 0;
+		int start = 0;
 
-	final String nodeText = textNode.getWholeText();
-	final String baseUri = textNode.baseUri();
-	final Matcher matcher = Regex.VALID_MENTION_OR_LIST.matcher(nodeText);
+		final String nodeText = textNode.getWholeText();
+		final String baseUri = textNode.baseUri();
+		final Matcher matcher = Regex.VALID_MENTION_OR_LIST.matcher(nodeText);
 
-	while (matcher.find()) {
-	    // Add a new textnode for everything before the url
-	    final String textBefore = String.format("%s%s", nodeText.substring(start, matcher.start()), matcher.group(1));
-	    if (!textBefore.isEmpty()) {
-		rv.add(new TextNode(textBefore));
-	    }
-	    final Element newAnchor = new Element(Tag.valueOf("a"), baseUri);
-	    newAnchor.attr("href", String.format("https://twitter.com/%s", matcher.group(Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME)));
-	    newAnchor.appendChild(new TextNode(String.format("@%s", matcher.group(Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME))));
-	    rv.add(newAnchor);
-	    start = matcher.end();
+		while (matcher.find()) {
+			// Add a new textnode for everything before the url
+			final String textBefore = String.format("%s%s", nodeText.substring(start, matcher.start()), matcher.group(1));
+			if (!textBefore.isEmpty()) {
+				rv.add(new TextNode(textBefore));
+			}
+			final Element newAnchor = new Element(Tag.valueOf("a"), baseUri);
+			newAnchor.attr("href", String.format("https://twitter.com/%s", matcher.group(Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME)));
+			newAnchor.appendChild(new TextNode(String.format("@%s", matcher.group(Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME))));
+			rv.add(newAnchor);
+			start = matcher.end();
+		}
+
+		// Add a new textnode for everything after
+		final String textAfter = nodeText.substring(start);
+		if (!textAfter.isEmpty()) {
+			rv.add(new TextNode(textAfter));
+		}
+		return rv;
 	}
-
-	// Add a new textnode for everything after
-	final String textAfter = nodeText.substring(start);
-	if (!textAfter.isEmpty()) {
-	    rv.add(new TextNode(textAfter));
-	}
-	return rv;
-    }
 }

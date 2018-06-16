@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 michael-simons.eu.
+ * Copyright 2014-2018 michael-simons.eu.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,44 +22,44 @@ import java.util.Optional;
  */
 public final class Strings {
 
-    private Strings() {
-    }
-
-    /**
-     * @see #truncate(java.lang.String, int, java.util.Optional)
-     * @param in The text to truncate
-     * @param length Length after which strings should be truncated
-     * @return A truncated string
-     */
-    public static String truncate(final String in, final int length) {
-	return truncate(in, length, Optional.of("…"));
-    }
-
-    /**
-     * Truncates the string {@code in} to a string with maximal {@code length}
-     * chars. If an ellipsis is given, the length of the ellipsis is taken into
-     * account as well.
-     * <br>
-     * This method counts the number of unicode codepoints in the string and the
-     * ellipsis, not the number of chars. So any text with a 4 byte utf8 char in
-     * it will likely have a length greater than {@code length}.
-     *
-     * @param in The text to truncate
-     * @param length The maximum length
-     * @param ellipsis An optional ellipsis
-     * @return A truncated string if {@code in} is longher than {@code length}
-     */
-    public static String truncate(final String in, final int length, final Optional<String> ellipsis) {
-	final String _ellipsis = ellipsis.orElse("");
-	final int maxLength = length - _ellipsis.codePointCount(0, _ellipsis.length());
-	if (maxLength < 0) {
-	    throw new IllegalArgumentException("Cannot truncate string to length < 0");
+	private Strings() {
 	}
 
-	String rv = in;
-	if (in.codePointCount(0, in.length()) > length) {
-	    rv = new String(in.codePoints().limit(maxLength).toArray(), 0, maxLength) + _ellipsis;
+	/**
+	 * @param in     The text to truncate
+	 * @param length Length after which strings should be truncated
+	 * @return A truncated string
+	 * @see #truncate(java.lang.String, int, java.lang.String)
+	 */
+	public static String truncate(final String in, final int length) {
+		return truncate(in, length, "…");
 	}
-	return rv;
-    }
+
+	/**
+	 * Truncates the string {@code in} to a string with maximal {@code length}
+	 * chars. If an ellipsis is given, the length of the ellipsis is taken into
+	 * account as well.
+	 * <br>
+	 * This method counts the number of unicode codepoints in the string and the
+	 * ellipsis, not the number of chars. So any text with a 4 byte utf8 char in
+	 * it will likely have a length greater than {@code length}.
+	 *
+	 * @param in       The text to truncate
+	 * @param length   The maximum length
+	 * @param ellipsis An optional ellipsis
+	 * @return A truncated string if {@code in} is longher than {@code length}
+	 */
+	public static String truncate(final String in, final int length, final String ellipsis) {
+		var usedEllipsis = Optional.ofNullable(ellipsis).orElse("");
+		final int maxLength = length - usedEllipsis.codePointCount(0, usedEllipsis.length());
+		if (maxLength < 0) {
+			throw new IllegalArgumentException("Cannot truncate string to length < 0");
+		}
+
+		String rv = in;
+		if (in.codePointCount(0, in.length()) > length) {
+			rv = new String(in.codePoints().limit(maxLength).toArray(), 0, maxLength) + usedEllipsis;
+		}
+		return rv;
+	}
 }

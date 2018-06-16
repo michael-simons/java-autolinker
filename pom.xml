@@ -69,6 +69,22 @@
     <tag>HEAD</tag>
   </scm>
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.0.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>8.10.1</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
@@ -76,6 +92,27 @@
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <configuration>
+              <configLocation>src/checkstyle/checkstyle.xml</configLocation>
+              <suppressionsLocation>src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+              <encoding>UTF-8</encoding>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+              <linkXRef>false</linkXRef>
+            </configuration>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -146,7 +183,7 @@
         </executions>
       </plugin>
       <plugin>
-        
+
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5.3</version>
         <configuration>
@@ -229,7 +266,7 @@
       <build>
         <plugins>
           <plugin>
-            
+
             <artifactId>maven-gpg-plugin</artifactId>
             <version>1.6</version>
             <executions>

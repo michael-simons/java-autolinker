@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ac.simons;
+package ac.simons.autolinker;
 
 import ac.simons.autolinker.Strings;
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class StringsTest {
 	expectedException.expect(IllegalArgumentException.class);
 	expectedException.expectMessage("Cannot truncate string to length < 0");
 
-	Strings.truncate("abc", 1, Optional.of("..."));
+	Strings.truncate("abc", 1, "...");
     }
 
     @Test
@@ -45,29 +45,29 @@ public class StringsTest {
 
 	in = "1";
 	expected = "";
-	assertEquals(expected, Strings.truncate(in, 0, Optional.empty()));
+	assertEquals(expected, Strings.truncate(in, 0, null));
 
 	in = "abc";
 	expected = "…";
-	assertEquals(expected, Strings.truncate(in, 1, Optional.of("…")));
+	assertEquals(expected, Strings.truncate(in, 1, "…"));
 
 	// Copied from
 	// https://raw.githubusercontent.com/google/guava/master/guava-tests/test/com/google/common/base/AsciiTest.java
-	assertEquals("foobar", Strings.truncate("foobar", 10, Optional.of("...")));
-	assertEquals("fo...", Strings.truncate("foobar", 5, Optional.of("...")));
-	assertEquals("foobar", Strings.truncate("foobar", 6, Optional.of("...")));
-	assertEquals("...", Strings.truncate("foobar", 3, Optional.of("...")));
-	assertEquals("foobar", Strings.truncate("foobar", 10, Optional.of("…")));
-	assertEquals("foo…", Strings.truncate("foobar", 4, Optional.of("…")));
-	assertEquals("fo--", Strings.truncate("foobar", 4, Optional.of("--")));
-	assertEquals("foobar", Strings.truncate("foobar", 6, Optional.of("…")));
-	assertEquals("foob…", Strings.truncate("foobar", 5, Optional.of("…")));
-	assertEquals("foo", Strings.truncate("foobar", 3, Optional.of("")));
-	assertEquals("", Strings.truncate("", 5, Optional.of("")));
-	assertEquals("", Strings.truncate("", 5, Optional.of("...")));
-	assertEquals("", Strings.truncate("", 0, Optional.of("")));
+	assertEquals("foobar", Strings.truncate("foobar", 10, "..."));
+	assertEquals("fo...", Strings.truncate("foobar", 5, "..."));
+	assertEquals("foobar", Strings.truncate("foobar", 6, "..."));
+	assertEquals("...", Strings.truncate("foobar", 3, "..."));
+	assertEquals("foobar", Strings.truncate("foobar", 10, "…"));
+	assertEquals("foo…", Strings.truncate("foobar", 4, "…"));
+	assertEquals("fo--", Strings.truncate("foobar", 4, "--"));
+	assertEquals("foobar", Strings.truncate("foobar", 6, "…"));
+	assertEquals("foob…", Strings.truncate("foobar", 5, "…"));
+	assertEquals("foo", Strings.truncate("foobar", 3, ""));
+	assertEquals("", Strings.truncate("", 5, ""));
+	assertEquals("", Strings.truncate("", 5, "..."));
+	assertEquals("", Strings.truncate("", 0, ""));
 
 	// Naive would split the surrogate pair
-	assertEquals("12👍…", Strings.truncate("12👍45", 4, Optional.of("…")));
+	assertEquals("12👍…", Strings.truncate("12👍45", 4, "…"));
     }
 }

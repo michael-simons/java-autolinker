@@ -16,6 +16,7 @@
 package ac.simons.autolinker;
 
 import java.util.List;
+
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
@@ -29,16 +30,16 @@ import org.jsoup.nodes.TextNode;
  */
 public interface AutoLinker {
 
-    /**
-     * Gets the content of <code>node</code> and tries to find linkable content.
-     * If content is found, create new text nodes before and after the content
-     * and a new anchor element with the new link
-     * <br>
-     * If the autolinker makes no changes, just return a list containing the
-     * original node.
-     *
-     * @param textNode The text node which may contain linkable texts
-     * @return The new node list created from {@code textNode}
-     */
-    List<Node> createLinks(TextNode textNode);
+	/**
+	 * Gets the content of <code>node</code> and tries to find linkable content.
+	 * If content is found, create new text nodes before and after the content
+	 * and a new anchor element with the new link
+	 * <br>
+	 * If the autolinker makes no changes, just return a list containing the
+	 * original node.
+	 *
+	 * @param textNode The text node which may contain linkable texts
+	 * @return The new node list created from {@code textNode}
+	 */
+	List<Node> createLinks(TextNode textNode);
 }
